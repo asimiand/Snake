@@ -12,10 +12,13 @@ window.requestAnimationFrame = (function () {
         };
 }());
 
+//Limpiamos la pantalla pintando un cuadrado arriba
 function paint(ctx) {
+    //Color del fondo
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
+    //Color del cosito que se mueve
     ctx.fillStyle = '#0f0';
     ctx.fillRect(x, y, 10, 10);
 }
@@ -27,6 +30,7 @@ function act() {
     }
 }
 
+//Llama a la funcion paint y act una y otra vez 
 function run() {
     window.requestAnimationFrame(run);
     act();
@@ -41,3 +45,19 @@ function init() {
 }
 
 window.addEventListener('load', init, false);
+
+
+
+
+
+
+
+//Por problemas de compatibilidad ya que algunos navegadores no soportan el requestAnimationFrame
+window.requestAnimationFrame = (function () {
+    return window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 17);
+        };
+}());
