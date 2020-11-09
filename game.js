@@ -319,6 +319,17 @@
         act();
     }
 
+    //01.11
+    function resize() {
+
+        var w = window.innerWidth / canvas.width;
+        var h = window.innerHeight / canvas.height;
+        var scale = Math.min(h, w);
+        
+        canvas.style.width = (canvas.width * scale) + 'px';
+        canvas.style.height = (canvas.height * scale) + 'px';
+        }
+
     function init() {
         // Get canvas and context
         canvas = document.getElementById('canvas');
@@ -347,7 +358,13 @@
         // Start game
         run();
         repaint();
+        resize();
     }
+
+
+    window.addEventListener('resize', resize, false);
+
+//Fin 01.11
     
     window.addEventListener('load', init, false);
 }(window));
