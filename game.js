@@ -19,6 +19,7 @@
         highscoresScene = null,
         body = [],
         food = null,
+        fruit = null,
         //var wall = [],
         highscores = [],
         posHighscore = 10,
@@ -26,6 +27,7 @@
         score = 0,
         iBody = new Image(),
         iFood = new Image(),
+        iFruit = new Image(),
         aEat = new Audio(),
         aDie = new Audio();
 
@@ -120,6 +122,15 @@
         }
         localStorage.highscores = highscores.join(',');
     }
+	
+	function canPlayOgg() {
+        var aud = new Audio();
+        if (aud.canPlayType('audio/ogg').replace(/no/, '')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     function repaint() {
         window.requestAnimationFrame(repaint);
@@ -143,11 +154,26 @@
         // Load assets
         iBody.src = 'assets/body.png';
         iFood.src = 'assets/fruit.png';
-        aEat.src = 'assets/chomp.m4a';
-        aDie.src = 'assets/dies.m4a';
+        iFruit.src = 'assets/fruit2.png';
+        if (canPlayOgg()) {
+            aEat.src = 'assets/chomp.oga';
+            aDie.src = 'assets/dies.oga';
+        } else {
+            aEat.src = 'assets/chomp.m4a';
+            aDie.src = 'assets/dies.m4a';
+        }
+
+       // iBody.src = 'assets/body.png';
+       // iFood.src = 'assets/fruit.png';
+        //aEat.src = 'assets/chomp.m4a';
+       // aDie.src = 'assets/dies.m4a';
 
         // Create food
         food = new Rectangle(80, 80, 10, 10);
+
+         // Create fruit
+         fruit = new Rectangle(80, 80, 13, 13);
+
 
         // Create walls
         //wall.push(new Rectangle(50, 50, 10, 10));
@@ -160,7 +186,7 @@
             highscores = localStorage.highscores.split(',');
         }
         
-        // Start game
+        // Start gamefood
         run();
         repaint();
     }
@@ -200,6 +226,9 @@
         body.push(new Rectangle(0, 0, 10, 10));
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
+        fruit.x = random(canvas.width / 10 - 1) * 10;
+        fruit.y = random(canvas.height / 10 - 1) * 10;
+
         gameover = false;
     };
 
@@ -223,10 +252,12 @@
         //    wall[i].fill(ctx);
         //}
         
-        // Draw food
+        // Draw food and fruit
         ctx.strokeStyle = '#f00';
         food.drawImage(ctx, iFood);
+        fruit.drawImage(ctx, iFruit);
 
+             
         // Draw score
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'left';
@@ -303,11 +334,33 @@
             if (body[0].y < 0) {
                 body[0].y = canvas.height - body[0].height;
             }
-
+/*
             // Food Intersects
             if (body[0].intersects(food)) {
                 body.push(new Rectangle(0, 0, 10, 10));
                 score += 1;
+                food.x = random(canvas.width / 10 - 1) * 10;
+                food.y = random(canvas.height / 10 - 1) * 10;
+                aEat.play();
+            }
+			*/
+			//Fruit Intersects
+			if (body[0].intersects(fruit)) {
+                score += 1;
+                fetch("www.jsonplaceholder.com?score=100")
+                    .then(() => console.log("Great"))
+                    .catch(() => console.log("Error"));
+                fruit.x = random(canvas.width / 10 - 1) * 10;
+                fruit.y = random(canvas.height / 10 - 1) * 10;
+                aEat.play();
+            }
+
+            //Food Intersects
+			if (body[0].intersects(food)) {
+                score += 1;
+                fetch("www.jsonplaceholder.com?score=100")
+                    .then(() => console.log("Great"))
+                    .catch(() => console.log("Error"));
                 food.x = random(canvas.width / 10 - 1) * 10;
                 food.y = random(canvas.height / 10 - 1) * 10;
                 aEat.play();
